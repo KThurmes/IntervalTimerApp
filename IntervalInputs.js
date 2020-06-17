@@ -23,8 +23,13 @@ export class IntervalInputs extends Component{
 			workTime:'',//in seconds
 			restTime:'',//in seconds
 			intervals:'',
-			isVisible:'',
-			isValid:''//###TODO: Add validation checks
+			isValid:false//###TODO: Add validation checks
+		}
+	}
+	
+	componentDidUpdate(prevProps, prevState){
+		if(this.state.workTime !== prevState.workTime || this.state.restTime !== prevState.restTime ||this.state.intervals !== prevState.intervals){
+			this.validationCheck();
 		}
 	}
 	
@@ -40,6 +45,20 @@ export class IntervalInputs extends Component{
 		this.setState({intervals:intervals});
 	}
 	
+	//Are all three fields in the form filled out with numbers?
+	validationCheck=()=>{
+		if(this.state.workTime.match(/[\d]/)
+			&&
+		this.state.restTime.match(/[\d]/)
+			&&
+		this.state.intervals.match(/[\d]/)){
+			this.setState({isValid:true});
+		}
+		else{
+			this.setState({isValid:false});
+		}
+	}
+	
 	pushResetButton = () =>{
 		this.props.handleReset(parseInt(this.state.workTime), parseInt(this.state.restTime), parseInt(this.state.intervals));
 	}
@@ -47,8 +66,8 @@ export class IntervalInputs extends Component{
 	render(){
 		return (
 		<View>
-			<Text>Work time: </Text><Text>{convertInputToDisplayString(this.state.workTime)}</Text>
-			<Text>Rest time: </Text>
+			<Text>Work time: {convertInputToDisplayString(this.state.workTime)}</Text>
+			<Text>Rest time: {convertInputToDisplayString(this.state.restTime)}</Text>
 			<TimeInputField
 				sendInput={this.handleWorkTimeChange}
 				placeholderDisplay='work time'
@@ -65,6 +84,7 @@ export class IntervalInputs extends Component{
 			<Button 
 				title= "START"
 				onPress={this.pushResetButton}
+				disabled={!this.state.isValid}
 			/>
 		</View>
 		)

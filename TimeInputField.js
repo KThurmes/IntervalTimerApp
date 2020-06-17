@@ -17,41 +17,35 @@ export class TimeInputField extends Component{
 		
 		this.state = {
 			time:'000000',//a string containing the time that a user inputs in the form of hhmmss
-			isValid:'1', //###TODO: validation checks
-			isVisible:'1',
+			isValid:'true', //validation checks
 		}
 	}
 	
 	//a funtion to be called when the user changes the value in the form field. This updates state values.
 	handleTimeChange = (time) =>{
-		time = '000000' + time;
-		time = time.substring(time.length-6);
-		this.setState({time:time});
-		this.props.sendInput(time);
+		if(time.match(/[\d]/)){
+			time = '000000' + time;
+			time = time.substring(time.length-6);
+			this.setState({time:time});
+			this.setState({isValid:true});
+			this.props.sendInput(time);
+		}
+		else{
+			console.log("invalid")
+			this.setState({isValid:false});
+		}
 	}
 	
 	render(){
-		
-		if(this.state.isVisible == 1){
-			return(
-				<TextInput 
-					keyboardType = 'numeric'
-					onChangeText = {this.handleTimeChange}
-					placeholder = {this.props.placeholderDisplay}
-				/>
-			)
-		}
-		else{
 			return(
 			<View>
 				<TextInput 
 					keyboardType = 'numeric'
 					onChangeText = {this.handleTimeChange}
 					placeholder = {this.props.placeholderDisplay}
-					style = {styles.small}
 				/>
+				{!this.state.isValid && <Text>Please enter a valid time.</Text>}
 			</View>
 			)
-		}
 	}
 }

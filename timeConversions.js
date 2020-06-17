@@ -5,7 +5,6 @@
 
 	export function convertToTimeUnits(timeString){
 		timeString = "000000" + timeString;
-		console.log("time string= "+ timeString);
 		let len = timeString.length;
 		let timeUnits ={
 			hours: parseInt(timeString.substring(len-6, len-4)),
